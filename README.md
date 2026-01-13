@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ⚡ TechGear – Next-Gen Gadget Marketplace
 
-## Getting Started
+**TechGear** is a modern, full-stack gadget showcase application built with **Next.js 15 (App Router)** and **Express.js**. This platform features a sleek dark-themed UI, dynamic product listings, and a secure dashboard for managing inventory.
 
-First, run the development server:
+## 🚀 Live Demo
+🔗 [View Live Site]()
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Key Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 1. **Stunning Landing Page**
+- A high-conversion landing page with **7 distinct sections**:
+  - **Hero Section**: Modern cyberpunk-style introduction.
+  - **Featured Categories**: Easy navigation to gadgets.
+  - **New Arrivals**: Highlighting the latest tech items.
+  - **Why Choose Us**: Our unique selling points.
+  - **Promotion Banner**: Attractive discount call-to-action.
+  - **Customer Testimonials**: Social proof and user reviews.
+  - **FAQ**: Frequently asked questions with an accordion UI.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. **Product Management**
+- **Items List**: Browse all gadgets with real-time fetching from the API.
+- **Dynamic Details**: Individual pages for every product with comprehensive info.
+- **Protected Add Item**: Secure route for authorized users to add new products.
 
-## Learn More
+### 3. **Authentication System**
+- Secure **Mock Login** system using credentials.
+- Persistent session management using **Cookies**.
+- **Route Protection**: Unauthorized users are automatically redirected from the 'Add Item' page.
 
-To learn more about Next.js, take a look at the following resources:
+### 4. **Modern UI/UX**
+- Fully **Responsive Design** (Mobile, Tablet, Desktop).
+- **Dark Theme** aesthetics with Tailwind CSS.
+- Interactive **Toast Notifications** for user actions.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💻 Tech Stack
 
-## Deploy on Vercel
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS.
+- **Backend**: Express.js (Node.js).
+- **Icons**: Lucide-React.
+- **Notifications**: React Hot Toast.
+- **State/Storage**: Cookies (cookies-next).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
