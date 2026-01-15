@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
   X,
@@ -13,11 +13,19 @@ import {
   Laptop,
   Watch,
   Headphones,
+  LogOut,
+  Settings,
+  LayoutDashboard,
+  ChevronDown,
 } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -35,79 +43,147 @@ const Navbar = () => {
     { name: "Audio", icon: <Headphones size={16} /> },
   ];
 
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Items", path: "/items" },
+    { name: "Add Item", path: "/add-item" },
+  ];
+
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-black/60 backdrop-blur-xl border-b border-white/5"
+          ? "bg-black/40 backdrop-blur-sm shadow-[0_10px_30px_-10px_rgba(249,115,22,0.15)]"
           : "bg-transparent"
       }`}
     >
-      {/* --- TOP LAYER --- */}
+      {/* --- TOP LAYER (অরিজিনাল ডিজাইন অক্ষুণ্ণ) --- */}
       <div className="border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
           {/* Logo Section */}
           <Link href="/" className="flex items-center group">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative flex items-center justify-center p-1"
+              className="relative flex items-center gap-2"
             >
-              {/* লোগোর পেছনে একটা হালকা গ্লো ইফেক্ট (ঐচ্ছিক, চাইলে রাখতে পারেন) */}
-              <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-              <span className="relative z-10 flex items-center gap-2 text-white font-bold text-xl tracking-tighter">
-                <img
-                  src="/img/logo.png"
-                  alt="TechGear Logo"
-                  className="h-18 w-auto object-contain brightness-110 group-hover:brightness-125 transition-all duration-300"
-                />
-                {/* যদি লোগোর পাশে টেক্সট রাখতে চান তবে নিচের লাইনটি থাকবে, নয়তো কেটে দিন */}
-                {/* <span className="hidden md:block uppercase tracking-[0.2em] text-[14px]">TechGear</span> */}
-              </span>
+              <img
+                src="/img/logo.png"
+                alt="Logo"
+                className="h-16 w-auto object-contain brightness-110"
+              />
             </motion.div>
           </Link>
 
           {/* Nav Links (Desktop) */}
-          <div className="hidden md:flex items-center gap-8">
-            {["Home", "Items", "Add Item"].map((item) => (
-              <Link
-                key={item}
-                href={
-                  item === "Home"
-                    ? "/"
-                    : `/${item.toLowerCase().replace(" ", "-")}`
-                }
-                className={`text-xs uppercase tracking-widest font-semibold transition-colors hover:text-cyan-400 ${
-                  pathname ===
-                  (item === "Home"
-                    ? "/"
-                    : `/${item.toLowerCase().replace(" ", "-")}`)
-                    ? "text-cyan-400"
-                    : "text-zinc-400"
-                }`}
-              >
-                {item}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-10">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.path;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.path}
+                  className="relative group py-2"
+                >
+                  <span
+                    className={`text-[11px] uppercase tracking-[0.2em] font-black transition-colors duration-300 ${
+                      isActive
+                        ? "text-orange-500"
+                        : "text-zinc-400 group-hover:text-white"
+                    }`}
+                  >
+                    {link.name}
+                  </span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="navUnderline"
+                      className="absolute -bottom-1 left-0 w-full h-0.5 bg-orange-500 shadow-[0_0_10px_#f97316]"
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-zinc-400 hover:text-white transition group">
+          <div className="flex items-center gap-6">
+            <button className="relative p-2 text-zinc-400 hover:text-orange-500 transition group">
               <ShoppingCart size={22} />
-              <span className="absolute top-0 right-0 w-4 h-4 bg-cyan-500 text-black text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-black">
-                0
-              </span>
+              <AnimatePresence>
+                <motion.span
+                  key={cartCount}
+                  initial={{ scale: 0.5 }}
+                  animate={{ scale: 1 }}
+                  className="absolute top-0 right-0 w-4 h-4 bg-orange-500 text-black text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-black"
+                >
+                  {cartCount}
+                </motion.span>
+              </AnimatePresence>
             </button>
 
-            <Link href="/login" className="hidden md:block">
-              <div className="p-2 border border-white/10 rounded-full text-zinc-400 hover:text-cyan-400 hover:border-cyan-400 transition">
-                <User size={22} />
-              </div>
-            </Link>
+            {status === "authenticated" ? (
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center gap-2 p-1 pr-3 border border-white/10 rounded-full hover:border-orange-500 transition-all bg-white/5"
+                >
+                  <img
+                    src={
+                      session.user?.image ||
+                      `https://ui-avatars.com/api/?name=${session.user?.name}`
+                    }
+                    className="w-8 h-8 rounded-full object-cover border border-white/10"
+                    alt="User"
+                  />
+                  <ChevronDown
+                    size={14}
+                    className={`text-zinc-500 transition-transform ${
+                      showProfileMenu ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-            {/* Mobile Toggle */}
+                <AnimatePresence>
+                  {showProfileMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 mt-3 w-56 bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl backdrop-blur-xl"
+                    >
+                      <div className="px-4 py-3 border-b border-white/5">
+                        <p className="text-[10px] font-black text-orange-500 uppercase tracking-widest">
+                          Active Operator
+                        </p>
+                        <p className="text-sm font-bold text-white truncate">
+                          {session.user?.name}
+                        </p>
+                      </div>
+                      <div className="py-2">
+                        <button className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                          <LayoutDashboard size={16} /> Dashboard
+                        </button>
+                        <button className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                          <Settings size={16} /> Settings
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => signOut()}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-red-500 hover:bg-red-500/10 rounded-xl transition-all mt-1"
+                      >
+                        <LogOut size={16} /> Terminate Session
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link href="/register" className="hidden md:block">
+                <div className="px-5 py-2 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-white hover:text-black transition-all">
+                  Register
+                </div>
+              </Link>
+            )}
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden text-white p-2"
@@ -118,65 +194,144 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* --- BOTTOM LAYER (Search & Categories) --- */}
-      <div className="hidden md:block bg-white/[0.02] backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-10">
-          {/* Search Bar - Apple Gadgets Style */}
-          <div className="flex-1 relative group">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-cyan-400 transition-colors"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Search your next gadget..."
-              className="w-full bg-zinc-900/50 border border-white/5 rounded-full py-2.5 pl-12 pr-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:text-zinc-600"
-            />
-          </div>
-
-          {/* Categories Links */}
-          <div className="flex items-center gap-6">
+      {/* --- BOTTOM LAYER (ক্যাটাগরি ও অ্যানিমেটেড সার্চ) --- */}
+      <div className="hidden md:block bg-white/[0.06] backdrop-blur-sm border-b border-white/30">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-8">
             {categories.map((cat) => (
               <button
                 key={cat.name}
-                className="flex items-center gap-2 text-[13px] font-medium text-zinc-400 hover:text-white transition"
+                className="flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-orange-500 transition-colors uppercase tracking-widest group cursor-pointer"
               >
-                <span className="text-cyan-500/70">{cat.icon}</span>
+                <span className="text-zinc-500 group-hover:text-orange-500">
+                  {cat.icon}
+                </span>
                 {cat.name}
+                
+              </button>
+            ))}
+          </div>
+
+          {/* অ্যানিমেটেড সার্চ অপশন */}
+          <div className="relative group flex items-center">
+            <Search
+              className="absolute left-3 text-zinc-600 group-focus-within:text-orange-500 transition-colors"
+              size={16}
+            />
+            <motion.input
+              // ক্লিক করার পর কতটুকু বড় হবে (আপনি ৫৫০ দিয়েছেন, সেটাই রাখলাম)
+              whileFocus={{ width: 550 }}
+              // স্প্রিং অ্যানিমেশন অনেক ফাস্ট (stiffness: 650)
+              transition={{ type: "spring", stiffness: 650, damping: 30 }}
+              type="text"
+              placeholder="Search gadgets..."
+              /* নিচের w-[350px] পরিবর্তন করে আপনি ডিফল্ট উইডথ কন্ট্রোল করতে পারবেন।
+     আমি আপনার ২৬৮ পিক্সেল থেকে বাড়িয়ে ৩৫০ পিক্সেল করে দিলাম।
+  */
+              className="w-[350px] bg-white/5 border border-white/60 rounded-full py-1.5 pl-10 pr-4 text-[11px] text-white focus:outline-none focus:border-orange-500/50 placeholder:text-zinc-600 shadow-2xl transition-colors"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* --- আধুনিক মোবাইল মেনু --- */}
+      <AnimatePresence>
+  {isOpen && (
+    <motion.div
+      initial={{ x: "100%" }}
+      animate={{ x: 0 }}
+      exit={{ x: "100%" }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      className="fixed inset-0 bg-[#0a0a0a] z-[60] flex flex-col md:hidden"
+    >
+      {/* --- Header (Logo & Close) --- */}
+      <div className="flex justify-between items-center p-6 border-b border-white/5 bg-black/50 backdrop-blur-md">
+        <img src="/img/logo.png" className="h-7 w-auto" alt="Logo" />
+        <button
+          onClick={() => setIsOpen(false)}
+          className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-orange-500 transition-all border border-white/10"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-6 space-y-8">
+        {/* --- Main Navigation Links --- */}
+        <div className="space-y-3">
+          <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">Main Menu</p>
+          <div className="grid grid-cols-1 gap-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                onClick={() => setIsOpen(false)}
+                href={link.path}
+                className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
+                  pathname === link.path 
+                    ? "bg-orange-500/10 border-orange-500/50 text-orange-500" 
+                    : "bg-white/5 border-white/5 text-zinc-300"
+                }`}
+              >
+                <span className="text-sm font-bold uppercase tracking-widest">{link.name}</span>
+                <div className={`w-1.5 h-1.5 rounded-full ${pathname === link.path ? "bg-orange-500" : "bg-zinc-700"}`} />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* --- Categories Grid (Quick Access) --- */}
+        <div className="space-y-4">
+          <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">Categories</p>
+          <div className="grid grid-cols-2 gap-3">
+            {categories.map((cat) => (
+              <button
+                key={cat.name}
+                className="flex flex-col items-start gap-3 p-4 bg-zinc-900/50 border border-white/5 rounded-2xl hover:border-orange-500/30 transition-all group"
+              >
+                <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500 group-hover:scale-110 transition-transform">
+                  {cat.icon}
+                </div>
+                <span className="text-xs font-bold text-zinc-400">{cat.name}</span>
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          className="absolute top-full left-0 w-full bg-zinc-950 border-b border-white/10 flex flex-col p-6 gap-6 md:hidden backdrop-blur-3xl"
-        >
-          {/* Mobile Search */}
-          <div className="relative">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full bg-zinc-900 border border-white/10 rounded-xl py-3 pl-12 text-white"
-            />
+      {/* --- Footer (Profile & Auth) --- */}
+      <div className="p-6 bg-black/50 border-t border-white/5 backdrop-blur-sm">
+        {session ? (
+          <div className="flex items-center justify-between bg-white/5 p-3 rounded-2xl border border-white/10">
+            <div className="flex items-center gap-3">
+              <img 
+                src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}`} 
+                className="w-10 h-10 rounded-xl border border-white/10" 
+                alt="User"
+              />
+              <div>
+                <p className="text-xs font-bold text-white truncate w-32">{session.user?.name}</p>
+                <p className="text-[9px] text-zinc-500 uppercase font-black">Operator</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => signOut()}
+              className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 transition-colors"
+            >
+              <LogOut size={18} />
+            </button>
           </div>
-          <div className="flex flex-col gap-4">
-            {["Home", "Items", "Add Item"].map((link) => (
-              <Link key={link} href="/" className="text-lg text-zinc-400">
-                {link}
-              </Link>
-            ))}
-          </div>
-        </motion.div>
-      )}
+        ) : (
+          <Link
+            onClick={() => setIsOpen(false)}
+            href="/register"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-orange-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-[0_10px_30px_rgba(249,115,22,0.2)]"
+          >
+            <User size={18} /> Get Started
+          </Link>
+        )}
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </nav>
   );
 };

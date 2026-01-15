@@ -2,11 +2,12 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
+import AuthProvider from "@/components/ui/AuthProvider";
 
 // Plus Jakarta Sans ফন্ট কনফিগারেশন
-const jakarta = Plus_Jakarta_Sans({ 
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-jakarta", // CSS ভেরিয়েবল হিসেবে ব্যবহারের জন্য
 });
 
@@ -17,15 +18,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="black"> 
-      <body
-        className={`${jakarta.className} antialiased bg-black text-white`}
-      >
-        <Navbar></Navbar>
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer></Footer>
+    <html lang="en" data-theme="black">
+      <body className={`${jakarta.className} antialiased bg-black text-white`}>
+        <AuthProvider>
+          <Navbar></Navbar>
+          <main className="min-h-screen">{children}</main>
+          <Footer></Footer>
+        </AuthProvider>
       </body>
     </html>
   );
