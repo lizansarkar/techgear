@@ -72,7 +72,7 @@ const initialProducts = [
     price: 129,
     rating: 4.8,
     image:
-      "https://images.unsplash.com/photo-1597872200370-496de239a563?q=80&w=500",
+      "https://images.unsplash.com/photo-1544640808-32ca72ac7f37?q=80&w=500",
     specs: "7000MB/s Read",
   },
   {

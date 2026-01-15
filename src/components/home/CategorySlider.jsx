@@ -25,7 +25,7 @@ const CategorySlider = () => {
     { id: 4, name: "iPad", img: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=500" },
     { id: 5, name: "MacBook", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=500" },
     { id: 6, name: "Vision Pro", img: "https://images.unsplash.com/photo-1478416272538-5f7e51dc5400?q=80&w=500" },
-    { id: 7, name: "Console", img: "https://images.unsplash.com/photo-1605906302474-f60df49a60ef?q=80&w=500" },
+    { id: 7, name: "Console", img: "https://images.unsplash.com/photo-1486401899868-0e435ed85128?q=80&w=500" },
     { id: 8, name: "Cameras", img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=500" },
   ];
 
