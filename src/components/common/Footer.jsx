@@ -18,11 +18,11 @@ const Footer = () => {
 
   return (
     <footer className="relative bg-[#050505] text-white pt-24 pb-8 overflow-hidden border-t border-white/5">
-      {/* Background Decorative Element */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+      {/* Background Decorative Element - এখন কমলা গ্রেডিয়েন্ট */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* TOP SECTION: Branding & Big Call to Action */}
+        {/* TOP SECTION: Branding & Newsletter */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 mb-20">
           <div className="space-y-4">
             {/* Logo Section */}
@@ -32,34 +32,30 @@ const Footer = () => {
                 whileTap={{ scale: 0.95 }}
                 className="relative flex items-center justify-center p-1"
               >
-                {/* লোগোর পেছনে একটা হালকা গ্লো ইফেক্ট (ঐচ্ছিক, চাইলে রাখতে পারেন) */}
                 <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <span className="relative z-10 flex items-center gap-2 text-white font-bold text-xl tracking-tighter">
+                <span className="relative z-10 flex items-center gap-2">
                   <img
-                    src="/img/logo.png"
+                    src="/img/tech-gear-logo.png"
                     alt="TechGear Logo"
-                    className="h-18 w-auto object-contain brightness-110 group-hover:brightness-125 transition-all duration-300"
+                    className="h-16 w-auto object-contain brightness-110 group-hover:brightness-125 transition-all duration-300"
                   />
-                  {/* যদি লোগোর পাশে টেক্সট রাখতে চান তবে নিচের লাইনটি থাকবে, নয়তো কেটে দিন */}
-                  {/* <span className="hidden md:block uppercase tracking-[0.2em] text-[14px]">TechGear</span> */}
                 </span>
               </motion.div>
             </Link>
-            <p className="text-zinc-500 max-w-sm text-lg">
-              Redefining the digital frontier with gadgets that inspire.
+            <p className="text-zinc-500 max-w-sm text-lg leading-relaxed">
+              Redefining the <span className="text-zinc-300">digital frontier</span> with gadgets that inspire and empower.
             </p>
           </div>
 
-          {/* Styled Search/Newsletter Box from your reference */}
+          {/* Newsletter Box - অরেঞ্জ থিম টাচ */}
           <div className="w-full lg:w-auto">
             <div className="relative group min-w-[300px] md:min-w-[450px]">
               <input
                 type="email"
-                placeholder="Join the newsletter..."
-                className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl py-5 pl-6 pr-16 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
+                placeholder="Join the elite newsletter..."
+                className="w-full bg-zinc-900/40 backdrop-blur-md border border-white/10 rounded-2xl py-5 pl-6 pr-16 text-white focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500/50 transition-all"
               />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-cyan-500 hover:bg-cyan-400 text-black p-3 rounded-xl transition-all shadow-lg active:scale-95">
+              <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-black p-3 rounded-xl transition-all shadow-[0_0_20px_rgba(249,115,22,0.3)] active:scale-95">
                 <Send size={20} />
               </button>
             </div>
@@ -67,117 +63,98 @@ const Footer = () => {
         </div>
 
         {/* MIDDLE SECTION: Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20 font-medium">
           <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-500">
+            <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500">
               Products
             </h4>
             <ul className="flex flex-col gap-4 text-zinc-400">
-              <Link href="/items" className="hover:text-white transition">
-                iPhones
+              <Link href="/items" className="hover:text-orange-400 transition-colors inline-flex items-center gap-1 group">
+                 <span className="w-0 group-hover:w-2 h-px bg-orange-500 transition-all duration-300"></span> iPhones
               </Link>
-              <Link href="/items" className="hover:text-white transition">
-                MacBooks
+              <Link href="/items" className="hover:text-orange-400 transition-colors inline-flex items-center gap-1 group">
+                 <span className="w-0 group-hover:w-2 h-px bg-orange-500 transition-all duration-300"></span> MacBooks
               </Link>
-              <Link href="/items" className="hover:text-white transition">
-                Accessories
-              </Link>
-            </ul>
-          </div>
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-500">
-              Company
-            </h4>
-            <ul className="flex flex-col gap-4 text-zinc-400">
-              <Link href="#" className="hover:text-white transition">
-                Our Story
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                Global Stores
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                Contact
-              </Link>
-            </ul>
-          </div>
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-500">
-              Support
-            </h4>
-            <ul className="flex flex-col gap-4 text-zinc-400">
-              <Link href="#" className="hover:text-white transition">
-                Warranty
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                Refunds
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                FAQ
+              <Link href="/items" className="hover:text-orange-400 transition-colors inline-flex items-center gap-1 group">
+                 <span className="w-0 group-hover:w-2 h-px bg-orange-500 transition-all duration-300"></span> Audio Gear
               </Link>
             </ul>
           </div>
 
-          {/* Professional Credentials & Apps */}
+          <div className="space-y-6">
+            <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500">
+              Company
+            </h4>
+            <ul className="flex flex-col gap-4 text-zinc-400">
+              <Link href="#" className="hover:text-orange-400 transition-colors">Our Story</Link>
+              <Link href="#" className="hover:text-orange-400 transition-colors">Global Stores</Link>
+              <Link href="#" className="hover:text-orange-400 transition-colors">Careers</Link>
+            </ul>
+          </div>
+
+          <div className="space-y-6">
+            <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500">
+              Support
+            </h4>
+            <ul className="flex flex-col gap-4 text-zinc-400">
+              <Link href="#" className="hover:text-orange-400 transition-colors">Warranty</Link>
+              <Link href="#" className="hover:text-orange-400 transition-colors">Refunds</Link>
+              <Link href="#" className="hover:text-orange-400 transition-colors">Help Center</Link>
+            </ul>
+          </div>
+
+          {/* Apps & Socials */}
           <div className="space-y-8">
             <div className="flex flex-col gap-3">
-              <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-500">
+              <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-zinc-500">
                 Get the App
               </h4>
               <div className="flex gap-3">
-                <div className="p-3 bg-zinc-900 rounded-xl hover:bg-zinc-800 cursor-pointer border border-white/5 transition">
-                  <Apple size={22} className="text-zinc-300" />
-                </div>
-                <div className="p-3 bg-zinc-900 rounded-xl hover:bg-zinc-800 cursor-pointer border border-white/5 transition">
-                  <Play size={20} className="text-zinc-300" />
-                </div>
+                <motion.div whileHover={{ y: -3 }} className="p-3 bg-zinc-900/50 rounded-xl hover:bg-orange-500/10 cursor-pointer border border-white/5 hover:border-orange-500/30 transition">
+                  <Apple size={22} className="text-zinc-300 hover:text-orange-500 transition-colors" />
+                </motion.div>
+                <motion.div whileHover={{ y: -3 }} className="p-3 bg-zinc-900/50 rounded-xl hover:bg-orange-500/10 cursor-pointer border border-white/5 hover:border-orange-500/30 transition">
+                  <Play size={20} className="text-zinc-300 hover:text-orange-500 transition-colors" />
+                </motion.div>
               </div>
             </div>
             <div className="flex gap-4">
-              <motion.a
-                whileHover={{ y: -5 }}
-                href="https://linkedin.com"
-                className="text-zinc-500 hover:text-cyan-400 transition"
-              >
-                <Linkedin size={20} />
-              </motion.a>
-              <motion.a
-                whileHover={{ y: -5 }}
-                href="https://github.com"
-                className="text-zinc-500 hover:text-white transition"
-              >
-                <Github size={20} />
-              </motion.a>
-              <motion.a
-                whileHover={{ y: -5 }}
-                href="#"
-                className="text-zinc-500 hover:text-cyan-400 transition"
-              >
-                <Globe size={20} />
-              </motion.a>
+              {[
+                { icon: <Linkedin size={20} />, href: "#" },
+                { icon: <Github size={20} />, href: "#" },
+                { icon: <Globe size={20} />, href: "#" }
+              ].map((social, i) => (
+                <motion.a
+                  key={i}
+                  whileHover={{ y: -5, scale: 1.1 }}
+                  href={social.href}
+                  className="text-zinc-500 hover:text-orange-500 transition-colors bg-zinc-900/30 p-2 rounded-lg border border-white/5"
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* BOTTOM SECTION: Trust & Legal */}
+        {/* BOTTOM SECTION: Legal */}
         <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-6">
-            <p className="text-zinc-600 text-sm">
-              © {currentYear} TechGear. All Rights Reserved.
+            <p className="text-zinc-600 text-sm font-medium">
+              © {currentYear} <span className="text-zinc-400">TechGear</span>. All Rights Reserved.
             </p>
-            <div className="hidden md:flex items-center gap-2 text-zinc-600 text-xs">
-              <ShieldCheck size={14} className="text-cyan-500/50" />
+            <div className="hidden md:flex items-center gap-2 text-zinc-600 text-xs bg-white/5 px-3 py-1 rounded-full border border-white/5">
+              <ShieldCheck size={14} className="text-orange-500" />
               <span>Encrypted & Secure</span>
             </div>
           </div>
 
           <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-            <span className="hover:text-zinc-400 cursor-pointer transition">
-              Privacy Policy
+            <span className="hover:text-orange-500 cursor-pointer transition-colors">Privacy</span>
+            <span className="hover:text-orange-500 cursor-pointer transition-colors">Terms</span>
+            <span className="text-orange-500/60 flex items-center gap-1">
+              <Zap size={10} className="fill-current" /> Powered by @lizansarkar
             </span>
-            <span className="hover:text-zinc-400 cursor-pointer transition">
-              Terms
-            </span>
-            <span className="text-cyan-500/50">Assignment 9 • SCIC-12</span>
           </div>
         </div>
       </div>

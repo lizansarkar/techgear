@@ -24,8 +24,8 @@ const LoginPage = () => {
 
   const handleDemoLogin = () => {
     setFormData({
-      email: "lizan@gmail.com", // আপনার ডাটাবেসের ডাটা অনুযায়ী
-      password: "123456Aa", // আপনার পাসওয়ার্ডটি এখানে বসান
+      email: "lizansarkar16@gmail.com",
+      password: "123456Aa",
     });
     
     Swal.fire({
@@ -102,10 +102,10 @@ const LoginPage = () => {
           <button 
             type="button"
             onClick={handleDemoLogin}
-            className="w-full mb-6 bg-zinc-800/50 border border-zinc-700 hover:border-orange-500/50 py-3 rounded-xl flex items-center justify-center gap-3 transition-all group"
+            className="w-full mb-6 bg-zinc-800/50 border border-zinc-700 hover:border-orange-500/50 py-3 rounded-xl flex items-center justify-center gap-3 transition-all group cursor-pointer"
           >
             <UserCheck className="text-orange-500 group-hover:scale-110 transition-transform" size={18} />
-            <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">Load Demo Credentials</span>
+            <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">Use Demo Credentials</span>
           </button>
 
           <div className="relative mb-8 text-center">
@@ -137,14 +137,14 @@ const LoginPage = () => {
               disabled={loading}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              className="w-full bg-orange-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all duration-500 shadow-xl shadow-orange-500/20 disabled:opacity-50"
+              className="w-full bg-orange-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all duration-500 shadow-xl shadow-orange-500/20 disabled:opacity-50 cursor-pointer"
             >
               {loading ? <Loader2 className="animate-spin" /> : <>AUTHENTICATE <LogIn size={20} /></>}
             </motion.button>
           </form>
 
           <p className="text-center mt-8 text-zinc-500 text-[10px] font-medium italic">
-            Need access? <Link href="/register" className="ml-2 text-orange-500 font-black hover:underline uppercase">Initialize Account</Link>
+            Need access? <Link href="/register" className="ml-2 text-orange-500 font-black hover:underline uppercase">Register Account</Link>
           </p>
         </motion.div>
       </div>

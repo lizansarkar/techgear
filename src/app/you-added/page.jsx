@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
+import AddedItemsSkeleton from "@/components/skeletons/AddedItemsSkeleton";
 
 const YouAddedItems = () => {
   const [items, setItems] = useState([]);
@@ -101,20 +102,14 @@ const YouAddedItems = () => {
     }
   };
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-[#050505]">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-        >
-          <Loader2 className="text-orange-500" size={60} />
-        </motion.div>
-        <p className="text-zinc-500 mt-4 tracking-widest uppercase text-[10px]">
-          Synchronizing Secure Database...
-        </p>
-      </div>
-    );
+    <div className="bg-[#050505] min-h-screen">
+      <AddedItemsSkeleton />
+    </div>
+  );
+  }
+
 
   return (
     <main className="bg-[#050505] min-h-screen pt-[120px] pb-20 px-6 text-white overflow-hidden">

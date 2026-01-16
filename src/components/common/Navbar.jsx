@@ -68,9 +68,9 @@ const Navbar = () => {
               className="relative flex items-center gap-2"
             >
               <img
-                src="/img/logo.png"
+                src="/img/tech-gear-logo.png"
                 alt="Logo"
-                className="h-16 w-auto object-contain brightness-110"
+                className="h-12 w-auto object-contain brightness-110"
               />
             </motion.div>
           </Link>
@@ -83,7 +83,8 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   href={link.path}
-                  className="relative group py-2"
+                  // এখানে একটু 'px-4' বা 'px-5' বাড়িয়েছি যাতে ডটগুলো টেক্সটের গায়ে না লেগে থাকে
+                  className="relative group py-2 px-5 flex items-center justify-center"
                 >
                   <span
                     className={`text-[11px] uppercase tracking-[0.2em] font-black transition-colors duration-300 ${
@@ -94,11 +95,42 @@ const Navbar = () => {
                   >
                     {link.name}
                   </span>
+
                   {isActive && (
-                    <motion.div
-                      layoutId="navUnderline"
-                      className="absolute -bottom-1 left-0 w-full h-0.5 bg-orange-500 shadow-[0_0_10px_#f97316]"
-                    />
+                    <>
+                      {/* ১. বাম পাশের ডট (Start) */}
+                      <motion.span
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{
+                          scale: [1, 1.4, 1],
+                          opacity: [0.7, 1, 0.7],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                        // left-0 দিয়ে একদম শুরুতে রাখা হয়েছে
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_12px_#f97316]"
+                      />
+
+                      {/* ২. ডান পাশের ডট (End) */}
+                      <motion.span
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{
+                          scale: [1, 1.4, 1],
+                          opacity: [0.7, 1, 0.7],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 0.5, // অল্টারনেটিং জ্বলজ্বল ইফেক্টের জন্য ডিলে
+                        }}
+                        // right-0 দিয়ে একদম শেষে রাখা হয়েছে
+                        className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_12px_#f97316]"
+                      />
+                    </>
                   )}
                 </Link>
               );
@@ -122,10 +154,10 @@ const Navbar = () => {
             </button>
 
             {status === "authenticated" ? (
-              <div className="relative">
+              <div className="relative cursor-pointer">
                 <button
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  className="flex items-center gap-2 p-1 pr-3 border border-white/10 rounded-full hover:border-orange-500 transition-all bg-white/5"
+                  className="flex items-center gap-2 p-1 pr-3 border border-white/10 rounded-full hover:border-orange-500 transition-all bg-white/5 cursor-pointer"
                 >
                   <img
                     src={
@@ -149,11 +181,11 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 mt-3 w-56 bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl backdrop-blur-xl"
+                      className="absolute right-0 mt-3 w-56 bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl backdrop-blur-xl z-40"
                     >
                       <div className="px-4 py-3 border-b border-white/5">
-                        <p className="text-[10px] font-black text-orange-500 uppercase tracking-widest">
-                          Active Operator
+                        <p className="text-[10px] font-black text-orange-500 tracking-widest">
+                          {session.user?.email || "No Email Provided"}
                         </p>
                         <p className="text-sm font-bold text-white truncate">
                           {session.user?.name}
@@ -169,7 +201,7 @@ const Navbar = () => {
                       </div>
                       <button
                         onClick={() => signOut()}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-red-500 hover:bg-red-500/10 rounded-xl transition-all mt-1"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-red-500 hover:bg-red-500/10 rounded-xl transition-all mt-1 cursor-pointer"
                       >
                         <LogOut size={16} /> Terminate Session
                       </button>
