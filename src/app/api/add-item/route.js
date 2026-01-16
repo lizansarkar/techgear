@@ -4,7 +4,7 @@ import { dbConnect } from "@/lib/dbConnect";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const collection = await dbConnect("added-items"); // আপনার চাওয়া কালেকশন নাম
+    const collection = await dbConnect("added-items");
 
     const result = await collection.insertOne({
       ...body,
