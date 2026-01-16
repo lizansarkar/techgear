@@ -12,56 +12,58 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ItemsDtailsSkeleton from "@/components/skeletons/ItemsDtailsSkeleton";
+import { useParams } from "next/navigation"; // আইডি ধরার জন্য
 
 const ItemsDtails = () => {
+  const { id } = useParams(); // URL থেকে আইডি নেওয়া হচ্ছে
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedImg, setSelectedImg] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState("Titanium Silverblue");
-  const [selectedStorage, setSelectedStorage] = useState("12/256GB");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedStorage, setSelectedStorage] = useState("");
 
   // Magnifying Zoom State
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0, show: false });
   const imgRef = useRef(null);
 
-  const product = {
-    name: "Galaxy S25 Ultra 5G",
-    brand: "SAMSUNG",
-    price: "112,000",
-    oldPrice: "115,000",
-    stock: "In Stock",
-    code: "AGL28725",
-    images: [
-      "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=2070",
-      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?q=80&w=2058",
-      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=2071",
-    ],
-    colors: [
-      { name: "Titanium Black", hex: "#1a1a1a" },
-      { name: "Titanium Grey", hex: "#8e8e8e" },
-      { name: "Titanium Silverblue", hex: "#b0c4de" },
-      { name: "Titanium Pinkgold", hex: "#e6b8af" },
-    ],
-    storage: ["12/1TB", "12/256GB", "12/512GB"],
-  };
+  // ব্যাকএন্ড থেকে ডাটা ফেচ করা
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/items/${id}`);
+        const data = await res.json();
+        
+        if (res.ok) {
+          setProduct(data);
+          // ডিফল্ট ভ্যালু সেট করা
+          if (data.colors?.length > 0) setSelectedColor(data.colors[0].name);
+          if (data.storage?.length > 0) setSelectedStorage(data.storage[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchProduct();
+  }, [id]);
 
   // Zoom Logic
   const handleMouseMove = (e) => {
+    if (!imgRef.current) return;
     const { left, top, width, height } = imgRef.current.getBoundingClientRect();
     const x = ((e.pageX - left) / width) * 100;
     const y = ((e.pageY - top) / height) * 100;
     setZoomPos({ x, y, show: true });
   };
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
   if (loading) return <ItemsDtailsSkeleton />;
+  if (!product) return <div className="text-white text-center py-20">Product not found!</div>;
+
+  // ইমেজ হ্যান্ডলিং (যদি অ্যারে না থাকে তবে সিঙ্গেল ইমেজকে অ্যারে বানিয়ে নেওয়া)
+  const productImages = Array.isArray(product.images) ? product.images : [product.image];
 
   return (
     <main className="bg-black text-white min-h-screen pt-[140px] pb-20 selection:bg-orange-500/30">
@@ -73,7 +75,7 @@ const ItemsDtails = () => {
           </span>
           <ChevronRight size={14} />
           <span className="hover:text-white cursor-pointer transition-colors">
-            Mobile Phone
+            {product.category || "Gadgets"}
           </span>
           <ChevronRight size={14} />
           <span className="text-cyan-500 font-medium">{product.brand}</span>
@@ -89,7 +91,7 @@ const ItemsDtails = () => {
               ref={imgRef}
             >
               <Image
-                src={product.images[selectedImg]}
+                src={productImages[selectedImg]}
                 alt={product.name}
                 fill
                 className={`object-contain p-10 transition-opacity duration-300 ${
@@ -102,9 +104,9 @@ const ItemsDtails = () => {
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    backgroundImage: `url(${product.images[selectedImg]})`,
+                    backgroundImage: `url(${productImages[selectedImg]})`,
                     backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
-                    backgroundSize: "250%", // Zoom level
+                    backgroundSize: "250%",
                     backgroundRepeat: "no-repeat",
                   }}
                 />
@@ -123,7 +125,7 @@ const ItemsDtails = () => {
 
             {/* Thumbnails */}
             <div className="flex gap-4 px-2">
-              {product.images.map((img, idx) => (
+              {productImages.map((img, idx) => (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -131,7 +133,7 @@ const ItemsDtails = () => {
                   onClick={() => setSelectedImg(idx)}
                   className={`relative w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
                     selectedImg === idx
-                      ? "border-cyan-500 shadow-[0_0_15px_rgba(249,115,22,0.4)]"
+                      ? "border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.4)]"
                       : "border-white/5 bg-zinc-900"
                   }`}
                 >
@@ -165,68 +167,74 @@ const ItemsDtails = () => {
               <span className="text-4xl font-black text-white">
                 ৳{product.price}
               </span>
-              <span className="text-xl text-zinc-500 line-through">
-                ৳{product.oldPrice}
-              </span>
+              {product.oldPrice && (
+                <span className="text-xl text-zinc-500 line-through">
+                  ৳{product.oldPrice}
+                </span>
+              )}
               <div className="hidden md:block h-8 w-[1px] bg-white/10 mx-2" />
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-green-500 flex items-center gap-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />{" "}
-                  {product.stock}
+                  {product.stock || "In Stock"}
                 </span>
                 <span className="text-xs text-zinc-500">
-                  Code: {product.code}
+                  Code: {product.code || product._id.slice(-6).toUpperCase()}
                 </span>
               </div>
             </div>
 
             {/* Options */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-              <div className="space-y-4">
-                <p className="font-bold text-zinc-400 uppercase tracking-widest text-xs">
-                  Select Color
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color.name}
-                      onClick={() => setSelectedColor(color.name)}
-                      className={`px-4 py-2 rounded-full border text-sm font-medium flex items-center gap-2 transition-all cursor-pointer ${
-                        selectedColor === color.name
-                          ? "border-cyan-500 bg-cyan-500/10 text-white"
-                          : "border-white/10 bg-zinc-900 text-zinc-400 hover:border-white/30"
-                      }`}
-                    >
-                      <span
-                        className="w-3 h-3 rounded-full shadow-sm"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      {color.name}
-                    </button>
-                  ))}
+              {product.colors && product.colors.length > 0 && (
+                <div className="space-y-4">
+                  <p className="font-bold text-zinc-400 uppercase tracking-widest text-xs">
+                    Select Color
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {product.colors.map((color) => (
+                      <button
+                        key={color.name}
+                        onClick={() => setSelectedColor(color.name)}
+                        className={`px-4 py-2 rounded-full border text-sm font-medium flex items-center gap-2 transition-all cursor-pointer ${
+                          selectedColor === color.name
+                            ? "border-cyan-500 bg-cyan-500/10 text-white"
+                            : "border-white/10 bg-zinc-900 text-zinc-400 hover:border-white/30"
+                        }`}
+                      >
+                        <span
+                          className="w-3 h-3 rounded-full shadow-sm"
+                          style={{ backgroundColor: color.hex }}
+                        />
+                        {color.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="space-y-4">
-                <p className="font-bold text-zinc-400 uppercase tracking-widest text-xs">
-                  Select Storage
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {product.storage.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedStorage(size)}
-                      className={`px-4 py-2 rounded-xl border text-sm font-bold transition-all cursor-pointer ${
-                        selectedStorage === size
-                          ? "border-cyan-500 bg-cyan-500/10 text-white"
-                          : "border-white/10 bg-zinc-900 text-zinc-400 hover:border-white/30"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+              {product.storage && product.storage.length > 0 && (
+                <div className="space-y-4">
+                  <p className="font-bold text-zinc-400 uppercase tracking-widest text-xs">
+                    Select Storage
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {product.storage.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedStorage(size)}
+                        className={`px-4 py-2 rounded-xl border text-sm font-bold transition-all cursor-pointer ${
+                          selectedStorage === size
+                            ? "border-cyan-500 bg-cyan-500/10 text-white"
+                            : "border-white/10 bg-zinc-900 text-zinc-400 hover:border-white/30"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Actions */}

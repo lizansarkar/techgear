@@ -46,7 +46,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Items", path: "/items" },
-    { name: "Add Item", path: "/add-item" },
+    { name: "Add Item", path: "/add-items" },
   ];
 
   return (
@@ -207,7 +207,6 @@ const Navbar = () => {
                   {cat.icon}
                 </span>
                 {cat.name}
-                
               </button>
             ))}
           </div>
@@ -219,15 +218,10 @@ const Navbar = () => {
               size={16}
             />
             <motion.input
-              // ক্লিক করার পর কতটুকু বড় হবে (আপনি ৫৫০ দিয়েছেন, সেটাই রাখলাম)
               whileFocus={{ width: 550 }}
-              // স্প্রিং অ্যানিমেশন অনেক ফাস্ট (stiffness: 650)
               transition={{ type: "spring", stiffness: 650, damping: 30 }}
               type="text"
               placeholder="Search gadgets..."
-              /* নিচের w-[350px] পরিবর্তন করে আপনি ডিফল্ট উইডথ কন্ট্রোল করতে পারবেন।
-     আমি আপনার ২৬৮ পিক্সেল থেকে বাড়িয়ে ৩৫০ পিক্সেল করে দিলাম।
-  */
               className="w-[350px] bg-white/5 border border-white/60 rounded-full py-1.5 pl-10 pr-4 text-[11px] text-white focus:outline-none focus:border-orange-500/50 placeholder:text-zinc-600 shadow-2xl transition-colors"
             />
           </div>
@@ -236,102 +230,123 @@ const Navbar = () => {
 
       {/* --- আধুনিক মোবাইল মেনু --- */}
       <AnimatePresence>
-  {isOpen && (
-    <motion.div
-      initial={{ x: "100%" }}
-      animate={{ x: 0 }}
-      exit={{ x: "100%" }}
-      transition={{ type: "spring", damping: 25, stiffness: 200 }}
-      className="fixed inset-0 bg-[#0a0a0a] z-[60] flex flex-col md:hidden"
-    >
-      {/* --- Header (Logo & Close) --- */}
-      <div className="flex justify-between items-center p-6 border-b border-white/5 bg-black/50 backdrop-blur-md">
-        <img src="/img/logo.png" className="h-7 w-auto" alt="Logo" />
-        <button
-          onClick={() => setIsOpen(false)}
-          className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-orange-500 transition-all border border-white/10"
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-6 space-y-8">
-        {/* --- Main Navigation Links --- */}
-        <div className="space-y-3">
-          <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">Main Menu</p>
-          <div className="grid grid-cols-1 gap-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                onClick={() => setIsOpen(false)}
-                href={link.path}
-                className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
-                  pathname === link.path 
-                    ? "bg-orange-500/10 border-orange-500/50 text-orange-500" 
-                    : "bg-white/5 border-white/5 text-zinc-300"
-                }`}
-              >
-                <span className="text-sm font-bold uppercase tracking-widest">{link.name}</span>
-                <div className={`w-1.5 h-1.5 rounded-full ${pathname === link.path ? "bg-orange-500" : "bg-zinc-700"}`} />
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* --- Categories Grid (Quick Access) --- */}
-        <div className="space-y-4">
-          <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">Categories</p>
-          <div className="grid grid-cols-2 gap-3">
-            {categories.map((cat) => (
+        {isOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-[#0a0a0a] z-[60] flex flex-col md:hidden"
+          >
+            {/* --- Header (Logo & Close) --- */}
+            <div className="flex justify-between items-center p-6 border-b border-white/5 bg-black/50 backdrop-blur-sm">
+              <img src="/img/logo.png" className="h-7 w-auto" alt="Logo" />
               <button
-                key={cat.name}
-                className="flex flex-col items-start gap-3 p-4 bg-zinc-900/50 border border-white/5 rounded-2xl hover:border-orange-500/30 transition-all group"
+                onClick={() => setIsOpen(false)}
+                className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-orange-500 transition-all border border-white/10"
               >
-                <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500 group-hover:scale-110 transition-transform">
-                  {cat.icon}
-                </div>
-                <span className="text-xs font-bold text-zinc-400">{cat.name}</span>
+                <X size={20} />
               </button>
-            ))}
-          </div>
-        </div>
-      </div>
+            </div>
 
-      {/* --- Footer (Profile & Auth) --- */}
-      <div className="p-6 bg-black/50 border-t border-white/5 backdrop-blur-sm">
-        {session ? (
-          <div className="flex items-center justify-between bg-white/5 p-3 rounded-2xl border border-white/10">
-            <div className="flex items-center gap-3">
-              <img 
-                src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}`} 
-                className="w-10 h-10 rounded-xl border border-white/10" 
-                alt="User"
-              />
-              <div>
-                <p className="text-xs font-bold text-white truncate w-32">{session.user?.name}</p>
-                <p className="text-[9px] text-zinc-500 uppercase font-black">Operator</p>
+            <div className="flex-1 overflow-y-auto p-6 space-y-8">
+              {/* --- Main Navigation Links --- */}
+              <div className="space-y-3">
+                <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">
+                  Main Menu
+                </p>
+                <div className="grid grid-cols-1 gap-2">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      onClick={() => setIsOpen(false)}
+                      href={link.path}
+                      className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
+                        pathname === link.path
+                          ? "bg-orange-500/10 border-orange-500/50 text-orange-500"
+                          : "bg-white/5 border-white/5 text-zinc-300"
+                      }`}
+                    >
+                      <span className="text-sm font-bold uppercase tracking-widest">
+                        {link.name}
+                      </span>
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          pathname === link.path
+                            ? "bg-orange-500"
+                            : "bg-zinc-700"
+                        }`}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* --- Categories Grid (Quick Access) --- */}
+              <div className="space-y-4">
+                <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">
+                  Categories
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {categories.map((cat) => (
+                    <button
+                      key={cat.name}
+                      className="flex flex-col items-start gap-3 p-4 bg-zinc-900/50 border border-white/5 rounded-2xl hover:border-orange-500/30 transition-all group"
+                    >
+                      <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500 group-hover:scale-110 transition-transform">
+                        {cat.icon}
+                      </div>
+                      <span className="text-xs font-bold text-zinc-400">
+                        {cat.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-            <button 
-              onClick={() => signOut()}
-              className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 transition-colors"
-            >
-              <LogOut size={18} />
-            </button>
-          </div>
-        ) : (
-          <Link
-            onClick={() => setIsOpen(false)}
-            href="/register"
-            className="flex items-center justify-center gap-3 w-full py-4 bg-orange-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-[0_10px_30px_rgba(249,115,22,0.2)]"
-          >
-            <User size={18} /> Get Started
-          </Link>
+
+            {/* --- Footer (Profile & Auth) --- */}
+            <div className="p-6 bg-black/50 border-t border-white/5 backdrop-blur-xl">
+              {session ? (
+                <div className="flex items-center justify-between bg-white/5 p-3 rounded-2xl border border-white/10">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={
+                        session.user?.image ||
+                        `https://ui-avatars.com/api/?name=${session.user?.name}`
+                      }
+                      className="w-10 h-10 rounded-xl border border-white/10"
+                      alt="User"
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-white truncate w-32">
+                        {session.user?.name}
+                      </p>
+                      <p className="text-[9px] text-zinc-500 uppercase font-black">
+                        Operator
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => signOut()}
+                    className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 transition-colors"
+                  >
+                    <LogOut size={18} />
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  href="/register"
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-orange-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-[0_10px_30px_rgba(249,115,22,0.2)]"
+                >
+                  <User size={18} /> Get Started
+                </Link>
+              )}
+            </div>
+          </motion.div>
         )}
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
+      </AnimatePresence>
     </nav>
   );
 };
